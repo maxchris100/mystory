@@ -1,348 +1,197 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import {
-    MapPin,
-    Calendar,
-    Car,
-    Users,
-    CheckCircle,
-    Menu,
-    X,
-    ArrowRight,
-    ShieldCheck,
-    Clock,
-    Headphones
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import React, { useEffect, useState, useRef } from "react";
+import { Heart, Calendar, MapPin, Camera, MailOpen } from "lucide-react";
+import MusicPlayer, { MusicPlayerHandle } from "@/components/custom/MusicPlayer";
+import GuestBook from "@/components/custom/GuestBook";
 
-// Mock Data
-const featuredCars = [
-    {
-        id: 1,
-        name: "Toyota Avanza",
-        type: "MPV",
-        price: 35,
-        image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=600",
-        passengers: 7,
-        transmission: "Automatic",
-    },
-    {
-        id: 2,
-        name: "Honda Brio",
-        type: "City Car",
-        price: 25,
-        image: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=600",
-        passengers: 4,
-        transmission: "Automatic",
-    },
-    {
-        id: 3,
-        name: "Mitsubishi Xpander",
-        type: "MPV",
-        price: 40,
-        image: "https://images.unsplash.com/photo-1621007947382-bb3c3968e3bb?auto=format&fit=crop&q=80&w=600",
-        passengers: 7,
-        transmission: "Manual",
-    },
-    {
-        id: 4,
-        name: "Toyota Fortuner",
-        type: "SUV",
-        price: 70,
-        image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=600",
-        passengers: 7,
-        transmission: "Automatic",
-    },
-];
+export default function WeddingPage() {
+  const [mounted, setMounted] = useState(false);
+  const [isInvitationOpened, setIsInvitationOpened] = useState(false);
+  const musicPlayerRef = useRef<MusicPlayerHandle>(null);
 
-export default function LandingPage() {
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-    return (
-        <div className="flex flex-col min-h-screen w-full bg-background text-foreground overflow-x-hidden">
+  const handleOpenInvitation = () => {
+    setIsInvitationOpened(true);
+    if (musicPlayerRef.current) {
+      musicPlayerRef.current.playMusic();
+    }
+    // Scroll to top when opened
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
-            {/* Navbar */}
-            <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                    {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2">
-                        <Image src="/logotext.png" alt="Renqar" width={100} height={32} className="object-contain" />
-                    </Link>
+  if (!mounted) return null;
 
-                    {/* Desktop Nav */}
-                    <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-                        <Link href="#" className="hover:text-primary transition-colors">Home</Link>
-                        <Link href="#cars" className="hover:text-primary transition-colors">Cars</Link>
-                        <Link href="#services" className="hover:text-primary transition-colors">Services</Link>
-                        <Link href="#contact" className="hover:text-primary transition-colors">Contact</Link>
-                    </nav>
+  return (
+    <main className="min-h-screen bg-background overflow-x-hidden">
+      <MusicPlayer ref={musicPlayerRef} />
 
-                    {/* Desktop Auth */}
-                    <div className="hidden md:flex items-center gap-3">
-                        <Link href="/signin">
-                            <Button variant="ghost">Sign In</Button>
-                        </Link>
-                        <Link href="/register">
-                            <Button>Get Started</Button>
-                        </Link>
-                    </div>
-
-                    {/* Mobile Menu Toggle */}
-                    <button
-                        className="md:hidden p-2"
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    >
-                        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
-                </div>
-
-                {/* Mobile Menu */}
-                {isMobileMenuOpen && (
-                    <div className="md:hidden border-t p-4 bg-background absolute w-full shadow-lg flex flex-col gap-4">
-                        <Link href="#" className="block py-2" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
-                        <Link href="#cars" className="block py-2" onClick={() => setIsMobileMenuOpen(false)}>Cars</Link>
-                        <Link href="#services" className="block py-2" onClick={() => setIsMobileMenuOpen(false)}>Services</Link>
-                        <Link href="#contact" className="block py-2" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
-                        <div className="flex flex-col gap-2 mt-2">
-                            <Link href="/signin" onClick={() => setIsMobileMenuOpen(false)}>
-                                <Button variant="outline" className="w-full">Sign In</Button>
-                            </Link>
-                            <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
-                                <Button className="w-full">Get Started</Button>
-                            </Link>
-                        </div>
-                    </div>
-                )}
-            </header>
-
-            <main className="flex-1">
-                {/* Hero Section */}
-                <section className="relative pt-12 pb-24 md:pt-20 md:pb-32 overflow-hidden">
-                    {/* Background elements */}
-                    <div className="absolute top-0 right-0 -z-10 w-1/2 h-full bg-primary/5 blur-3xl rounded-full translate-x-1/3" />
-                    <div className="absolute bottom-0 left-0 -z-10 w-1/3 h-2/3 bg-blue-500/5 blur-3xl rounded-full -translate-x-1/4" />
-
-                    <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
-                        <div className="space-y-6">
-                            <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary/10 text-primary hover:bg-primary/20">
-                                Top Rated Car Rental
-                            </div>
-                            <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
-                                Drive Your <span className="text-primary">Dream</span> Car Today
-                            </h1>
-                            <p className="text-lg text-muted-foreground max-w-lg">
-                                Experience the freedom of the road with our premium fleet. Affordable rates, flexible booking, and 24/7 support.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-3">
-                                <Button size="lg" className="gap-2">
-                                    Book Now <ArrowRight size={16} />
-                                </Button>
-                                <Button size="lg" variant="outline">
-                                    View Fleet
-                                </Button>
-                            </div>
-                            <div className="flex items-center gap-4 text-sm text-muted-foreground pt-4">
-                                <div className="flex items-center gap-1">
-                                    <CheckCircle size={16} className="text-primary" /> No Hidden Fees
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <CheckCircle size={16} className="text-primary" /> Free Cancellation
-                                </div>
-                            </div>
-                        </div>
-                        <div className="relative">
-                            {/* Placeholder Car Image */}
-                            <div className="relative aspect-[4/3] w-full">
-                                <Image
-                                    src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1000"
-                                    alt="Premium Car"
-                                    fill
-                                    className="object-cover rounded-2xl shadow-2xl"
-                                    priority
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Search Widget */}
-                <section className="container mx-auto px-4 -mt-16 relative z-10">
-                    <Card className="shadow-lg border-none bg-card/95 backdrop-blur">
-                        <CardContent className="p-6">
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Location</label>
-                                    <div className="relative">
-                                        <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                        <Input placeholder="Pick-up location" className="pl-9" />
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Pick-up Date</label>
-                                    <div className="relative">
-                                        <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                        <Input type="date" className="pl-9" />
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Return Date</label>
-                                    <div className="relative">
-                                        <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                        <Input type="date" className="pl-9" />
-                                    </div>
-                                </div>
-                                <Button className="w-full" size="lg">Search Cars</Button>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </section>
-
-                {/* Featured Cars */}
-                <section id="cars" className="py-20 bg-muted/30">
-                    <div className="container mx-auto px-4">
-                        <div className="text-center mb-12 space-y-2">
-                            <h2 className="text-3xl font-bold">Featured Vehicles</h2>
-                            <p className="text-muted-foreground">Choose from our wide range of premium vehicles</p>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {featuredCars.map((car) => (
-                                <Card key={car.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                                    <div className="relative aspect-video">
-                                        <Image
-                                            src={car.image}
-                                            alt={car.name}
-                                            fill
-                                            className="object-cover hover:scale-105 transition-transform duration-300"
-                                        />
-                                    </div>
-                                    <CardHeader className="p-4 pb-2">
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <CardTitle className="text-lg">{car.name}</CardTitle>
-                                                <CardDescription>{car.type}</CardDescription>
-                                            </div>
-                                            <div className="text-right">
-                                                <span className="text-lg font-bold text-primary">${car.price}</span>
-                                                <span className="text-xs text-muted-foreground block">/day</span>
-                                            </div>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent className="p-4 pt-0">
-                                        <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
-                                            <div className="flex items-center gap-1">
-                                                <Users size={14} /> {car.passengers}
-                                            </div>
-                                            <div className="flex items-center gap-1">
-                                                <Car size={14} /> {car.transmission}
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                    <CardFooter className="p-4 pt-0">
-                                        <Button className="w-full" variant="outline">View Details</Button>
-                                    </CardFooter>
-                                </Card>
-                            ))}
-                        </div>
-                        <div className="mt-10 text-center">
-                            <Button variant="secondary">View All Cars</Button>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Why Choose Us */}
-                <section id="services" className="py-20">
-                    <div className="container mx-auto px-4">
-                        <div className="grid md:grid-cols-3 gap-8 text-center">
-                            <div className="flex flex-col items-center space-y-4 p-6 rounded-2xl bg-muted/20 hover:bg-muted/40 transition-colors">
-                                <div className="p-4 rounded-full bg-primary/10 text-primary">
-                                    <ShieldCheck size={32} />
-                                </div>
-                                <h3 className="text-xl font-semibold">Secure & Safe</h3>
-                                <p className="text-muted-foreground">Every car is fully insured and regularly maintained for your safety.</p>
-                            </div>
-                            <div className="flex flex-col items-center space-y-4 p-6 rounded-2xl bg-muted/20 hover:bg-muted/40 transition-colors">
-                                <div className="p-4 rounded-full bg-primary/10 text-primary">
-                                    <Clock size={32} />
-                                </div>
-                                <h3 className="text-xl font-semibold">Fast Booking</h3>
-                                <p className="text-muted-foreground">Book your dream car in minutes with our easy-to-use platform.</p>
-                            </div>
-                            <div className="flex flex-col items-center space-y-4 p-6 rounded-2xl bg-muted/20 hover:bg-muted/40 transition-colors">
-                                <div className="p-4 rounded-full bg-primary/10 text-primary">
-                                    <Headphones size={32} />
-                                </div>
-                                <h3 className="text-xl font-semibold">24/7 Support</h3>
-                                <p className="text-muted-foreground">Our dedicated support team is always ready to assist you on the road.</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* CTA Section */}
-                <section className="py-20 bg-primary text-primary-foreground">
-                    <div className="container mx-auto px-4 text-center space-y-6">
-                        <h2 className="text-3xl md:text-4xl font-bold">Ready to Start Your Journey?</h2>
-                        <p className="text-primary-foreground/80 max-w-2xl mx-auto text-lg">
-                            Don&apos;t wait! Book your car now and get the best rates for your upcoming trip.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                            <Button size="lg" variant="secondary" className="font-semibold text-primary">
-                                Book a Car Now
-                            </Button>
-                            <Button size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                                Contact Us
-                            </Button>
-                        </div>
-                    </div>
-                </section>
-            </main>
-
-            {/* Footer */}
-            <footer className="py-12 bg-muted/30 border-t" id="contact">
-                <div className="container mx-auto px-4">
-                    <div className="grid md:grid-cols-4 gap-8 mb-8">
-                        <div className="space-y-4">
-                            <Image src="/logotext.png" alt="Renqar" width={100} height={32} />
-                            <p className="text-sm text-muted-foreground">
-                                Premium car rental service providing quality vehicles for all your travel needs.
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-semibold mb-4">Quick Links</h4>
-                            <ul className="space-y-2 text-sm text-muted-foreground">
-                                <li><Link href="#" className="hover:text-primary">Home</Link></li>
-                                <li><Link href="#cars" className="hover:text-primary">Cars</Link></li>
-                                <li><Link href="#services" className="hover:text-primary">Services</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-semibold mb-4">Support</h4>
-                            <ul className="space-y-2 text-sm text-muted-foreground">
-                                <li><Link href="/privacy" className="hover:text-primary">Privacy Policy</Link></li>
-                                <li><Link href="/terms" className="hover:text-primary">Terms of Service</Link></li>
-                                <li><Link href="#" className="hover:text-primary">FAQ</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-semibold mb-4">Contact</h4>
-                            <ul className="space-y-2 text-sm text-muted-foreground">
-                                <li>123 Main Street, Jakarta</li>
-                                <li>support@renqar.com</li>
-                                <li>+62 877 7427 3627</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="border-t pt-8 text-center text-sm text-muted-foreground">
-                        <p>&copy; 2025 Renqar. All rights reserved.</p>
-                    </div>
-                </div>
-            </footer>
+      {/* Cover Overlay (Invitation Envelope) */}
+      <div
+        className={`fixed inset-0 z-50 bg-background flex flex-col items-center justify-center transition-transform duration-1000 ease-in-out ${isInvitationOpened ? '-translate-y-full' : 'translate-y-0'}`}
+      >
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-10 left-10 text-primary/20 animate-float animation-delay-200">
+            <Heart size={48} />
+          </div>
+          <div className="absolute bottom-20 right-10 text-primary/10 animate-float animation-delay-400">
+            <Heart size={64} />
+          </div>
         </div>
-    );
+
+        <div className="text-center space-y-8 p-6 relative z-10 animate-fade-in">
+          <p className="text-xl md:text-2xl font-cinzel tracking-[0.3em] text-foreground/80 uppercase">
+            The Wedding Of
+          </p>
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-great-vibes text-primary drop-shadow-sm p-4">
+            Romeo & Juliet
+          </h1>
+          <div className="flex items-center justify-center gap-4 text-foreground/80 mt-4">
+            <span className="h-[1px] w-12 bg-primary/50"></span>
+            <p className="text-2xl md:text-3xl font-cinzel tracking-widest">25 . 12 . 2025</p>
+            <span className="h-[1px] w-12 bg-primary/50"></span>
+          </div>
+
+          <button
+            onClick={handleOpenInvitation}
+            className="mt-12 px-8 py-4 bg-primary text-white font-cinzel text-lg tracking-widest rounded-full hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center gap-3 mx-auto animate-pulse"
+          >
+            <MailOpen size={24} />
+            <span>Open Invitation</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Floating Elements Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-10 left-10 text-primary/20 animate-float animation-delay-200">
+          <Heart size={48} />
+        </div>
+        <div className="absolute top-40 right-20 text-primary/20 animate-float animation-delay-600">
+          <Heart size={32} />
+        </div>
+        <div className="absolute bottom-20 left-1/4 text-primary/10 animate-float animation-delay-400">
+          <Heart size={64} />
+        </div>
+        <div className="absolute top-1/2 right-10 text-primary/10 animate-float">
+          <Heart size={56} />
+        </div>
+      </div>
+
+      {/* Hero Section */}
+      <section className="relative h-screen flex flex-col items-center justify-center text-center p-6 z-10">
+        <div className="animate-fade-in space-y-6">
+          <p className="text-xl md:text-2xl font-cinzel tracking-[0.3em] text-foreground/80 uppercase">
+            The Wedding Of
+          </p>
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-great-vibes text-primary drop-shadow-sm p-4">
+            Romeo & Juliet
+          </h1>
+          <div className="flex items-center justify-center gap-4 text-foreground/80 mt-4">
+            <span className="h-[1px] w-12 bg-primary/50"></span>
+            <p className="text-2xl md:text-3xl font-cinzel tracking-widest">Save The Date</p>
+            <span className="h-[1px] w-12 bg-primary/50"></span>
+          </div>
+          <div className="mt-8 p-4 border border-primary/30 rounded-full inline-flex items-center gap-3 bg-white/50 backdrop-blur-sm shadow-sm animate-pulse">
+            <Calendar className="text-primary" size={24} />
+            <span className="text-lg font-cinzel font-semibold tracking-wider">
+              December 25, 2025
+            </span>
+          </div>
+        </div>
+
+        <div className="absolute bottom-10 animate-bounce text-primary/50">
+          <p className="text-sm font-cinzel tracking-widest mb-2">Scroll Down</p>
+          <div className="w-[1px] h-12 bg-primary/50 mx-auto"></div>
+        </div>
+      </section>
+
+      {/* Venue Section */}
+      <section className="py-20 px-6 md:px-20 bg-secondary/30 relative z-10">
+        <div className="max-w-4xl mx-auto text-center space-y-8">
+          <h2 className="text-4xl md:text-5xl font-great-vibes text-primary mb-10 animate-fade-in">
+            The Venue
+          </h2>
+
+          <div className="bg-white/80 backdrop-blur-md p-8 md:p-12 rounded-t-[100px] rounded-b-[20px] shadow-xl border border-primary/20 hover:shadow-2xl transition-shadow duration-500 transform hover:-translate-y-1">
+            <div className="flex flex-col items-center gap-6">
+              <div className="p-4 bg-primary/10 rounded-full text-primary">
+                <MapPin size={40} />
+              </div>
+              <div>
+                <h3 className="text-3xl font-cinzel font-bold text-foreground mb-2 tracking-wide">
+                  The Ritz-Carlton
+                </h3>
+                <p className="text-muted-foreground font-playfair italic text-lg">
+                  Grand Ballroom
+                </p>
+              </div>
+              <div className="w-full h-[1px] bg-border my-2"></div>
+              <p className="text-foreground/80 leading-relaxed font-playfair text-lg">
+                Join us for an evening of love, laughter, and happily ever after
+                at one of the most prestigious venues.
+              </p>
+              <button className="px-8 py-3 bg-primary text-white font-cinzel tracking-widest rounded-full hover:bg-primary/90 transition-colors shadow-lg text-sm">
+                View Map
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery / Story Section (Empty Frames) */}
+      <section className="py-20 px-6 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-great-vibes text-primary mb-4">
+              Our Moments
+            </h2>
+            <p className="text-muted-foreground font-cinzel tracking-wider">
+              Capturing our journey together
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="group relative aspect-[3/4] bg-white p-4 shadow-md rotate-1 hover:rotate-0 transition-transform duration-500 ease-in-out"
+              >
+                <div className="w-full h-full border-2 border-dashed border-primary/30 bg-secondary/20 flex flex-col items-center justify-center text-primary/40 gap-3 group-hover:bg-secondary/30 transition-colors">
+                  <Camera size={32} />
+                  <span className="font-cinzel text-xs tracking-[0.2em]">INSERT PHOTO HERE</span>
+                </div>
+                {/* Tape effect */}
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-white/90 shadow-sm rotate-[-2deg] opacity-80"></div>
+              </div>
+            ))}
+          </div>
+
+          {/* Wide Frame */}
+          <div className="mt-12 max-w-4xl mx-auto">
+            <div className="bg-white p-4 shadow-lg -rotate-1 hover:rotate-0 transition-transform duration-500">
+              <div className="w-full aspect-video border-2 border-dashed border-primary/30 bg-secondary/20 flex flex-col items-center justify-center text-primary/40 gap-3">
+                <Camera size={48} />
+                <span className="font-cinzel text-sm tracking-[0.2em] text-center px-4">INSERT PRE-WEDDING VIDEO/PHOTO HERE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Guest Book Section */}
+      <GuestBook />
+
+      {/* Footer */}
+      <footer className="py-12 bg-primary text-primary-foreground text-center relative z-10">
+        <div className="font-great-vibes text-4xl mb-4">Thank You</div>
+        <p className="font-cinzel tracking-widest text-xs opacity-90 uppercase">
+          Can't wait to celebrate with you!
+        </p>
+      </footer>
+    </main>
+  );
 }
