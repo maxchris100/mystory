@@ -189,7 +189,7 @@ export default function WeddingPage() {
       <footer className="py-12 bg-primary text-primary-foreground text-center relative z-10">
         <div className="font-great-vibes text-4xl mb-4">Thank You</div>
         <p className="font-cinzel tracking-widest text-xs opacity-90 uppercase">
-          Can't wait to celebrate with you!
+          {"Can't wait to celebrate with you!"}
         </p>
       </footer>
     </main>
